@@ -17,11 +17,11 @@ def get_categories(labels_dir):
     Get the object categories
     
     Args:
-      label_dir: Directory that contains object specific label as .txt files
+        label_dir: Directory that contains object specific label as .txt files
     Raises:
-      FileNotFoundError: If the label directory does not exist
+        FileNotFoundError: If the label directory does not exist
     Returns:
-      Object categories as a list
+        Object categories as a list
     """
     
     if not os.path.isdir(labels_dir):
@@ -42,11 +42,11 @@ def encode_labels(labels_dir, categories, save_location):
     Create csv file to encompass all labels for images 
     
     Args:
-      label_dir: Directory that contains object specific label as .txt files
+        label_dir: Directory that contains object specific label as .txt files
     Raises:
-      FileNotFoundError: If the labels file corresponding to an object category does not exist
+        FileNotFoundError: If the labels file corresponding to an object category does not exist
     Returns:
-      None
+        None
     """
     
     df = pd.DataFrame()
@@ -65,7 +65,28 @@ def encode_labels(labels_dir, categories, save_location):
                 df = df.merge(df_temp, how="right", on=["Image"])
             
     df.to_csv(os.path.join(save_location, 'labels.csv'), index=False)
+
+
+def get_nrows(file_name):
+    """
+    Get the number of rows of a csv file
     
+    Args:
+        file_path: path of the csv file
+    Raises:
+        FileNotFoundError: If the csv file does not exist
+    Returns:
+        number of rows
+    """
+    
+    if not os.path.isfile(file_name):
+        raise FileNotFoundError
+    
+    s = 0
+    with open(file_name) as f:
+        s = sum(1 for line in f)
+    return s
+
 
 categories = get_categories(labels_root_dir)
 encode_labels(labels_root_dir, categories, labels_save_dir)
