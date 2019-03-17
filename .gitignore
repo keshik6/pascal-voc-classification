@@ -6,6 +6,9 @@ __pycache__/
 # voc images
 data/
 
+# voc models
+models/
+
 # C extensions
 *.so
 
