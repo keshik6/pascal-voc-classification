@@ -137,4 +137,4 @@ def main(data_dir, model_name, lr, epochs, batch_size = 32):
     log_file.close()
 
 if __name__ == '__main__':
-    main('../data/', "resnet50", lr = [2e-4, 5e-3], epochs = 20)
+    main('../data/', "resnet50", lr = [1e-4, 5e-3], epochs = 30)

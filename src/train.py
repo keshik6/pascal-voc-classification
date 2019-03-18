@@ -11,7 +11,6 @@ import gc
 import os
 from utils import get_map_score
 
-
 def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, epochs, log_file):
     tr_loss, tr_map = [], []
     val_loss, val_map = [], []

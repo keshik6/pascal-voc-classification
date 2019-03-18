@@ -7,7 +7,6 @@ __pycache__/
 data/
 
 # voc models
-models/
 
 # C extensions
 *.so

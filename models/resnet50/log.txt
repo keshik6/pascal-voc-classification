@@ -1,0 +1,32 @@
+----------Experiment - resnet50-----------
+Epoch 1 >>train_loss: 3.3340, train_avg_precision:0.713, val_loss: 2.2047, val_avg_precision:0.867
+saving best weights...
+Epoch 2 >>train_loss: 2.3193, train_avg_precision:0.820, val_loss: 2.2261, val_avg_precision:0.863
+Epoch 3 >>train_loss: 2.1519, train_avg_precision:0.844, val_loss: 2.2417, val_avg_precision:0.863
+Epoch 4 >>train_loss: 2.0798, train_avg_precision:0.850, val_loss: 2.4126, val_avg_precision:0.853
+Epoch 5 >>train_loss: 1.9871, train_avg_precision:0.858, val_loss: 2.2966, val_avg_precision:0.860
+Epoch 6 >>train_loss: 1.9054, train_avg_precision:0.866, val_loss: 2.4514, val_avg_precision:0.850
+Epoch 7 >>train_loss: 1.7938, train_avg_precision:0.882, val_loss: 2.5727, val_avg_precision:0.847
+Epoch 8 >>train_loss: 1.7575, train_avg_precision:0.882, val_loss: 2.8795, val_avg_precision:0.835
+Epoch 9 >>train_loss: 1.6916, train_avg_precision:0.890, val_loss: 2.6308, val_avg_precision:0.839
+Epoch 10 >>train_loss: 1.6366, train_avg_precision:0.890, val_loss: 2.7530, val_avg_precision:0.838
+Epoch 11 >>train_loss: 1.6176, train_avg_precision:0.898, val_loss: 2.9425, val_avg_precision:0.837
+Epoch 12 >>train_loss: 1.5876, train_avg_precision:0.902, val_loss: 2.6180, val_avg_precision:0.848
+Epoch 13 >>train_loss: 1.5552, train_avg_precision:0.903, val_loss: 2.8001, val_avg_precision:0.841
+Epoch 14 >>train_loss: 1.4728, train_avg_precision:0.909, val_loss: 2.9204, val_avg_precision:0.828
+Epoch 15 >>train_loss: 1.3821, train_avg_precision:0.919, val_loss: 3.0505, val_avg_precision:0.837
+Epoch 16 >>train_loss: 1.4154, train_avg_precision:0.916, val_loss: 2.9146, val_avg_precision:0.841
+Epoch 17 >>train_loss: 1.3654, train_avg_precision:0.917, val_loss: 2.7370, val_avg_precision:0.848
+Epoch 18 >>train_loss: 1.3422, train_avg_precision:0.919, val_loss: 2.8702, val_avg_precision:0.844
+Epoch 19 >>train_loss: 1.2626, train_avg_precision:0.929, val_loss: 3.1321, val_avg_precision:0.834
+Epoch 20 >>train_loss: 1.3026, train_avg_precision:0.921, val_loss: 3.1736, val_avg_precision:0.850
+Epoch 21 >>train_loss: 1.2989, train_avg_precision:0.920, val_loss: 3.1206, val_avg_precision:0.830
+Epoch 22 >>train_loss: 1.2041, train_avg_precision:0.928, val_loss: 3.0504, val_avg_precision:0.838
+Epoch 23 >>train_loss: 1.1199, train_avg_precision:0.936, val_loss: 3.3961, val_avg_precision:0.832
+Epoch 24 >>train_loss: 1.1638, train_avg_precision:0.931, val_loss: 3.2591, val_avg_precision:0.843
+Epoch 25 >>train_loss: 1.0598, train_avg_precision:0.936, val_loss: 3.2113, val_avg_precision:0.840
+Epoch 26 >>train_loss: 1.0680, train_avg_precision:0.937, val_loss: 3.3170, val_avg_precision:0.841
+Epoch 27 >>train_loss: 1.0612, train_avg_precision:0.937, val_loss: 3.5952, val_avg_precision:0.835
+Epoch 28 >>train_loss: 1.0575, train_avg_precision:0.940, val_loss: 3.6266, val_avg_precision:0.827
+Epoch 29 >>train_loss: 0.9973, train_avg_precision:0.944, val_loss: 3.3388, val_avg_precision:0.834
+Epoch 30 >>train_loss: 0.9821, train_avg_precision:0.942, val_loss: 3.2228, val_avg_precision:0.850
