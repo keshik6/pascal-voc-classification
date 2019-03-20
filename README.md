@@ -47,7 +47,7 @@ We used average precision as the metric to measure performance. It is simply the
 
 Accuracy is a very poor metric to be used in this problem. I.e.: In a picture containing a person and dog, the model can output the result as train and get away with an accuracy of 85%!
 
-# Model
+## Model
 We used ResNet18 as our deep learning architecture due to relatively low memory utilization since number of parameters are less. (We used our local machines to train, preserving AWS credits for final project).  
 
 We used transfer learning method since the object classes are very similar to ImageNet classes.
