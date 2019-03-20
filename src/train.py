@@ -9,9 +9,28 @@ from tqdm import tqdm
 import torch
 import gc
 import os
-from utils import get_map_score
+from utils import get_ap_score
+import numpy as np
 
-def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, epochs, log_file):
+def train_model(model, device, optimizer, scheduler, train_loader, valid_loader, save_dir, model_num, epochs, log_file):
+    """
+    Train a deep neural network model
+    
+    Args:
+        model: pytorch model object
+        device: cuda or cpu
+        optimizer: pytorch optimizer object
+        scheduler: learning rate scheduler object that wraps the optimizer
+        train_dataloader: training  images dataloader
+        valid_dataloader: validation images dataloader
+        save_dir: Location to save model weights, plots and log_file
+        epochs: number of training epochs
+        log_file: text file instance to record training and validation history
+        
+    Returns:
+        Training history and Validation history (loss and average precision)
+    """
+    
     tr_loss, tr_map = [], []
     val_loss, val_map = [], []
     best_val_map = 0.0
@@ -20,6 +39,7 @@ def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, 
     for epoch in range(epochs):
         print("-------Epoch {}----------".format(epoch+1))
         log_file.write("Epoch {} >>".format(epoch+1))
+        scheduler.step()
         
         for phase in ['train', 'valid']:
             running_loss = 0.0
@@ -45,7 +65,7 @@ def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, 
                     
                     # Get metrics here
                     running_loss += loss # sum up batch loss
-                    running_ap += get_map_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
+                    running_ap += get_ap_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
                
                     # Backpropagate the system the determine the gradients
                     loss.backward()
@@ -80,7 +100,6 @@ def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, 
                 # torch.no_grad is for memory savings
                 with torch.no_grad():
                     for data, target in tqdm(valid_loader):
-                        #print(data)
                         target = target.float()
                         data, target = data.to(device), target.to(device)
                         output = model(data)
@@ -88,14 +107,12 @@ def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, 
                         loss = criterion(output, target)
                         
                         running_loss += loss # sum up batch loss
-                        running_ap += get_map_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
-
-                        # clear variables
+                        running_ap += get_ap_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
+                        
                         del data, target, output
                         gc.collect()
                         torch.cuda.empty_cache()
-                    
-                    
+
                     num_samples = float(len(valid_loader.dataset))
                     val_loss_ = running_loss.item()/num_samples
                     val_map_ = running_ap/num_samples
@@ -110,16 +127,28 @@ def train_model(model, device, optimizer, train_loader, valid_loader, save_dir, 
                     val_loss_, val_map_))
                     
                     # Save model using val_acc
-                    if val_map_ > best_val_map:
+                    if val_map_ >= best_val_map:
                         best_val_map = val_map_
                         log_file.write("saving best weights...\n")
-                        torch.save(model.state_dict(), os.path.join(save_dir,"model"))
+                        torch.save(model.state_dict(), os.path.join(save_dir,"model-{}.pth".format(model_num)))
                     
     return ([tr_loss, tr_map], [val_loss, val_map])
 
     
 
-def test(model, device, test_loader):
+def test(model, device, test_loader, returnAllScores=False):
+    """
+    Evaluate a deep neural network model
+    
+    Args:
+        model: pytorch model object
+        device: cuda or cpu
+        test_dataloader: test images dataloader
+        returnAllScores: If true addtionally return all confidence scores and ground truth 
+        
+    Returns:
+        test loss and average precision. If returnAllScores = True, check Args
+    """
     model.train(False)
     
     running_loss = 0
@@ -127,7 +156,11 @@ def test(model, device, test_loader):
     
     criterion = torch.nn.BCEWithLogitsLoss(reduction='sum')
     m = torch.nn.Sigmoid()
-
+    
+    if returnAllScores == True:
+        all_scores = np.empty((0, 20), float)
+        ground_scores = np.empty((0, 20), float)
+        
     with torch.no_grad():
         for data, target in tqdm(test_loader):
             #print(data.size(), target.size())
@@ -141,12 +174,15 @@ def test(model, device, test_loader):
             loss = criterion(output, target)
             
             running_loss += loss # sum up batch loss
-            running_ap += get_map_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
+            running_ap += get_ap_score(torch.Tensor.cpu(target).detach().numpy(), torch.Tensor.cpu(m(output)).detach().numpy()) 
+            
+            if returnAllScores == True:
+                all_scores = np.append(all_scores, torch.Tensor.cpu(m(output)).detach().numpy() , axis=0)
+                ground_scores = np.append(ground_scores, torch.Tensor.cpu(target).detach().numpy() , axis=0)
             
             del data, target, output
             gc.collect()
             torch.cuda.empty_cache()
-
 
     num_samples = float(len(test_loader.dataset))
     avg_test_loss = running_loss.item()/num_samples
@@ -156,4 +192,9 @@ def test(model, device, test_loader):
                     avg_test_loss, test_map))
     
     
-    return avg_test_loss, running_ap
+    if returnAllScores == False:
+        return avg_test_loss, running_ap
+    
+    return avg_test_loss, running_ap, all_scores, ground_scores
+
+

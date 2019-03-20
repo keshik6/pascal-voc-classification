@@ -10,8 +10,8 @@ from tqdm import tqdm
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import average_precision_score
-
+from sklearn.metrics import average_precision_score, accuracy_score
+import pandas as pd
 
 object_categories = ['aeroplane', 'bicycle', 'bird', 'boat',
                      'bottle', 'bus', 'car', 'cat', 'chair',
@@ -94,10 +94,15 @@ def get_nrows(file_name):
     return s
 
 
-#categories = get_categories(labels_root_dir)
-#encode_labels(labels_root_dir, categories, split = "train")
-
 def get_mean_and_std(dataloader):
+    """
+    Get the mean and std of a 3-channel image dataset 
+    
+    Args:
+        dataloader: pytorch dataloader
+    Returns:
+        mean and std of the dataset
+    """
     mean = []
     std = []
     
@@ -137,59 +142,139 @@ def get_mean_and_std(dataloader):
     return mean, std
 
 
-def plot_history(train_hist, val_hist, filename, labels=["train", "validation"]):
-    # Plot training and validation loss
+def plot_history(train_hist, val_hist, y_label, filename, labels=["train", "validation"]):
+    """
+    Plot training and validation history
+    
+    Args:
+        train_hist: numpy array consisting of train history values (loss/ accuracy metrics)
+        valid_hist: numpy array consisting of validation history values (loss/ accuracy metrics)
+        y_label: label for y_axis
+        filename: filename to store the resulting plot
+        labels: legend for the plot
+        
+    Returns:
+        None
+    """
+    # Plot loss and accuracy
     xi = [i for i in range(0, len(train_hist), 2)]
     plt.plot(train_hist, label = labels[0])
     plt.plot(val_hist, label = labels[1])
     plt.xticks(xi)
     plt.legend()
+    plt.xlabel("Epoch")
+    plt.ylabel(y_label)
     plt.savefig(filename)
     plt.show()
 
 
-
-def get_map_score(y_true, y_scores, threshold=0.5):
+def get_ap_score(y_true, y_scores):
+    """
+    Get average precision score between 2 1-d numpy arrays
+    
+    Args:
+        y_true: batch of true labels
+        y_scores: batch of confidence scores
+=
+    Returns:
+        sum of batch average precision
+    """
     scores = 0.0
     
     for i in range(y_true.shape[0]):
-        # both arrays are numpy arrays
-        tmp_y_scores = y_scores[i]
-        tmp_y_true = y_true[i]
-        sorted_ind = np.argsort(-tmp_y_scores)
-        
-        tp = tmp_y_true[sorted_ind] >= threshold;
-        fp = tmp_y_true[sorted_ind] < threshold;
-        
-        tp = np.cumsum(tp)
-        fp = np.cumsum(fp)
-        
-        rec=tp/ sum(tmp_y_true >= threshold)
-        prec=tp/ np.maximum(tp + fp, np.finfo(np.float64).eps)
-        
-        # correct AP calculation
-        # first append sentinel values at the end
-        mrec = np.concatenate(([0.], rec, [1.]))
-        mpre = np.concatenate(([0.], prec, [0.]))
-    
-        # compute the precision envelope
-        for i in range(mpre.size - 1, 0, -1):
-            mpre[i - 1] = np.maximum(mpre[i - 1], mpre[i])
-    
-        # to calculate area under PR curve, look for points
-        # where X axis (recall) changes value
-        i = np.where(mrec[1:] != mrec[:-1])[0]
-    
-        # and sum (\Delta recall) * prec
-        ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
-        scores += ap
+        scores += average_precision_score(y_true = y_true[i], y_score = y_scores[i])
     
     return scores
+
+def save_results(images, scores, columns, filename):
+    """
+    Save inference results as csv
     
+    Args:
+        images: inferred image list
+        scores: confidence score for inferred images
+        columns: object categories
+        filename: name and location to save resulting csv
+    """
+    df_scores = pd.DataFrame(scores, columns=columns)
+    df_scores['image'] = images
+    df_scores.set_index('image', inplace=True)
+    df_scores.to_csv(filename)
 
-#y_true = np.array([0, 0, 1, 1])
-#y_scores = np.array([0.1, 0.4, 0.35, 0.8])
-#print(get_map_score(y_true, y_scores))
+
+def append_gt(gt_csv_path, scores_csv_path, store_filename):
+    """
+    Append ground truth to confidence score csv
     
+    Args:
+        gt_csv_path: Ground truth csv location
+        scores_csv_path: Confidence scores csv path
+        store_filename: name and location to save resulting csv
+    """
+    gt_df = pd.read_csv(gt_csv_path)
+    scores_df = pd.read_csv(scores_csv_path)
+    
+    gt_label_list = []
+    for index, row in gt_df.iterrows():
+        arr = np.array(gt_df.iloc[index,1:], dtype=int)
+        target_idx = np.ravel(np.where(arr == 1))
+        j = [object_categories[i] for i in target_idx]
+        gt_label_list.append(j)
+    
+    scores_df.insert(1, "gt", gt_label_list)
+    scores_df.to_csv(store_filename, index=False)
 
+        
 
+def get_classification_accuracy(gt_csv_path, scores_csv_path, store_filename):
+    """
+    Plot mean tail accuracy across all classes for threshold values
+    
+    Args:
+        gt_csv_path: Ground truth csv location
+        scores_csv_path: Confidence scores csv path
+        store_filename: name and location to save resulting plot
+    """
+    gt_df = pd.read_csv(gt_csv_path)
+    scores_df = pd.read_csv(scores_csv_path)
+    
+    # Get the top-50 images
+    top_num = 2800
+    image_num = 2
+    num_threshold = 10
+    results = []
+    
+    for image_num in range(1, 21):
+        clf = np.sort(np.array(scores_df.iloc[:,image_num], dtype=float))[-top_num:]
+        ls = np.linspace(0.0, 1.0, num=num_threshold)
+        
+        class_results = []
+        for i in ls:
+            clf = np.sort(np.array(scores_df.iloc[:,image_num], dtype=float))[-top_num:]
+            clf_ind = np.argsort(np.array(scores_df.iloc[:,image_num], dtype=float))[-top_num:]
+            
+            # Read ground truth
+            gt = np.sort(np.array(gt_df.iloc[:,image_num], dtype=int))
+            
+            # Now get the ground truth corresponding to top-50 scores
+            gt = gt[clf_ind]
+            clf[clf >= i] = 1
+            clf[clf < i] = 0
+            
+            score = accuracy_score(y_true=gt, y_pred=clf, normalize=False)/clf.shape[0]
+            class_results.append(score)
+        
+        results.append(class_results)
+    
+    results = np.asarray(results)
+    
+    ls = np.linspace(0.0, 1.0, num=num_threshold)
+    plt.plot(ls, results.mean(0))
+    plt.title("Mean Tail Accuracy vs Threshold")
+    plt.xlabel("Threshold")
+    plt.ylabel("Mean Tail Accuracy")
+    plt.savefig(store_filename)
+    plt.show()
+            
+
+#get_classification_accuracy("../models/resnet18/results.csv", "../models/resnet18/gt.csv", "roc-curve.png")
