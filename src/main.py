@@ -80,11 +80,11 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
 #    mean=[0.485, 0.456, 0.406]
 #    std=[0.229, 0.224, 0.225]
     
-    transformations = transforms.Compose([transforms.Resize(330),
-                                      transforms.RandomChoice([
-                                              transforms.CenterCrop(300),
-                                              transforms.RandomResizedCrop(300, scale=(0.80, 1.0)),
-                                              ]),                                      
+    transformations = transforms.Compose([transforms.Resize((300, 300)),
+#                                      transforms.RandomChoice([
+#                                              transforms.CenterCrop(300),
+#                                              transforms.RandomResizedCrop(300, scale=(0.80, 1.0)),
+#                                              ]),                                      
                                       transforms.RandomChoice([
                                           transforms.ColorJitter(brightness=(0.80, 1.20)),
                                           transforms.RandomGrayscale(p = 0.25)
@@ -181,4 +181,4 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
 
 # Execute main function here
 if __name__ == '__main__':
-    main('../data/', "resnet50", num=1, lr = [1.5e-4, 5e-2], epochs = 15, save_results=True)
+    main('../data/', "resnet50", num=2, lr = [1.5e-4, 5e-2], epochs = 15, save_results=True)

@@ -1,0 +1,39 @@
+----------Experiment 2 - resnet50-----------
+transformations == Compose(
+    Resize(size=(300, 300), interpolation=PIL.Image.BILINEAR)
+    RandomChoice(
+    ColorJitter(brightness=(0.8, 1.2), contrast=None, saturation=None, hue=None)
+    RandomGrayscale(p=0.25)
+)
+    RandomHorizontalFlip(p=0.25)
+    RandomRotation(degrees=(-25, 25), resample=False, expand=False)
+    ToTensor()
+    Normalize(mean=[0.457342265910642, 0.4387686270106377, 0.4073427106250871], std=[0.26753769276329037, 0.2638145880487105, 0.2776826934044154])
+)
+Epoch 1 >>train_loss: 2.7855, train_avg_precision:0.780, val_loss: 2.0760, val_avg_precision:0.865
+saving best weights...
+Epoch 2 >>train_loss: 2.0199, train_avg_precision:0.867, val_loss: 2.4253, val_avg_precision:0.844
+Epoch 3 >>train_loss: 1.7363, train_avg_precision:0.899, val_loss: 1.9795, val_avg_precision:0.880
+saving best weights...
+Epoch 4 >>train_loss: 1.4866, train_avg_precision:0.921, val_loss: 1.9375, val_avg_precision:0.887
+saving best weights...
+Epoch 5 >>train_loss: 1.3005, train_avg_precision:0.938, val_loss: 1.8635, val_avg_precision:0.894
+saving best weights...
+Epoch 6 >>train_loss: 1.0265, train_avg_precision:0.961, val_loss: 1.8054, val_avg_precision:0.901
+saving best weights...
+Epoch 7 >>train_loss: 0.8164, train_avg_precision:0.972, val_loss: 1.7043, val_avg_precision:0.913
+saving best weights...
+Epoch 8 >>train_loss: 0.6422, train_avg_precision:0.983, val_loss: 1.6481, val_avg_precision:0.920
+saving best weights...
+Epoch 9 >>train_loss: 0.4944, train_avg_precision:0.990, val_loss: 1.6265, val_avg_precision:0.921
+saving best weights...
+Epoch 10 >>train_loss: 0.4258, train_avg_precision:0.993, val_loss: 1.6223, val_avg_precision:0.923
+saving best weights...
+Epoch 11 >>train_loss: 0.3611, train_avg_precision:0.995, val_loss: 1.6276, val_avg_precision:0.924
+saving best weights...
+Epoch 12 >>train_loss: 0.3320, train_avg_precision:0.996, val_loss: 1.6022, val_avg_precision:0.925
+saving best weights...
+Epoch 13 >>train_loss: 0.3249, train_avg_precision:0.996, val_loss: 1.6479, val_avg_precision:0.924
+Epoch 14 >>train_loss: 0.3165, train_avg_precision:0.996, val_loss: 1.6089, val_avg_precision:0.926
+saving best weights...
+Epoch 15 >>train_loss: 0.3258, train_avg_precision:0.996, val_loss: 1.6173, val_avg_precision:0.925
