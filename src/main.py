@@ -18,7 +18,7 @@ import os
 import torch.utils.model_zoo as model_zoo
 import utils
 
-def main(data_dir, model_name, num, lr, epochs, batch_size = 32, save_results=False):
+def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=False):
     """
     Main function
     
@@ -80,11 +80,11 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 32, save_results=Fa
 #    mean=[0.485, 0.456, 0.406]
 #    std=[0.229, 0.224, 0.225]
     
-    transformations = transforms.Compose([transforms.Resize((300, 300)),
-#                                      transforms.RandomChoice([
-#                                              transforms.CenterCrop(300),
-#                                              transforms.RandomResizedCrop(300, scale=(0.80, 1.0)),
-#                                              ]),                                      
+    transformations = transforms.Compose([transforms.Resize(330),
+                                      transforms.RandomChoice([
+                                              transforms.CenterCrop(300),
+                                              transforms.RandomResizedCrop(300, scale=(0.80, 1.0)),
+                                              ]),                                      
                                       transforms.RandomChoice([
                                           transforms.ColorJitter(brightness=(0.80, 1.20)),
                                           transforms.RandomGrayscale(p = 0.25)
@@ -119,7 +119,7 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 32, save_results=Fa
                                       transform=transformations_valid, 
                                       target_transform=encode_labels)
     
-    valid_loader = DataLoader(dataset_valid, batch_size=int(batch_size/5), num_workers=4)
+    valid_loader = DataLoader(dataset_valid, batch_size=batch_size, num_workers=4)
     
     # Load the best weights before testing
     weights_file_path =  os.path.join(model_dir, "model-{}.pth".format(num))
@@ -159,7 +159,7 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 32, save_results=Fa
                                       target_transform=encode_labels)
     
     
-    test_loader = DataLoader(dataset_test, batch_size=int(batch_size/10), num_workers=0, shuffle=False)
+    test_loader = DataLoader(dataset_test, batch_size=int(batch_size/5), num_workers=0, shuffle=False)
     
     if save_results:
         loss, ap, scores, gt = test(model, device, test_loader, returnAllScores=True)
@@ -181,4 +181,4 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 32, save_results=Fa
 
 # Execute main function here
 if __name__ == '__main__':
-    main('../data/', "resnet18", num=2, lr = [1.5e-4, 5e-2], epochs = 15, save_results=True)
+    main('../data/', "resnet50", num=1, lr = [1.5e-4, 5e-2], epochs = 15, save_results=True)
