@@ -18,21 +18,27 @@ import os
 import torch.utils.model_zoo as model_zoo
 import utils
 
-def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=False):
+def main(data_dir, model_name, num, lr, epochs, batch_size = 16, download_data = False, save_results=False):
     """
     Main function
     
     Args:
         data_dir: directory to download Pascal VOC data
         model_name: resnet18, resnet34 or resnet50
-        num: model_num for file management purposes
+        num: model_num for file management purposes (can be any postive integer. Your results stored will have this number as suffix)
         lr: initial learning rate list [lr for resnet_backbone, lr for resnet_fc] 
         epochs: number of training epochs
-        batch_size: batch size
-        save_results: Store results (boolean)
+        batch_size: batch size. Default=16
+        download_data: Boolean. If true will download the entire 2012 pascal VOC data as tar to the specified data_dir.
+        Set this to True only the first time you run it, and then set to False. Default False 
+        save_results: Store results (boolean). Default False
         
     Returns:
         test-time loss and average precision
+        
+    Example way of running this function:
+        if __name__ == '__main__':
+            main('../data/', "resnet34", num=1, lr = [1.5e-4, 5e-2], epochs = 15, batch_size=16, download_data=False, save_results=True)
     """
     
     model_dir = os.path.join("../models", model_name)
@@ -105,7 +111,7 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
     dataset_train = PascalVOC_Dataset(data_dir,
                                       year='2012', 
                                       image_set='train', 
-                                      download=False, 
+                                      download=download_data, 
                                       transform=transformations, 
                                       target_transform=encode_labels)
     
@@ -115,7 +121,7 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
     dataset_valid = PascalVOC_Dataset(data_dir,
                                       year='2012', 
                                       image_set='val', 
-                                      download=False, 
+                                      download=download_data, 
                                       transform=transformations_valid, 
                                       target_transform=encode_labels)
     
@@ -154,7 +160,7 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
     dataset_test = PascalVOC_Dataset(data_dir,
                                       year='2012', 
                                       image_set='val', 
-                                      download=False, 
+                                      download=download_data, 
                                       transform=transformations_test, 
                                       target_transform=encode_labels)
     
@@ -180,5 +186,5 @@ def main(data_dir, model_name, num, lr, epochs, batch_size = 16, save_results=Fa
         return loss, ap
 
 # Execute main function here
-if __name__ == '__main__':
-    main('../data/', "resnet50", num=2, lr = [1.5e-4, 5e-2], epochs = 15, save_results=True)
+#if __name__ == '__main__':
+#    main('../data/', "resnet34", num=1, lr = [1.5e-4, 5e-2], epochs = 1, batch_size=16, download_data=False, save_results=True)
