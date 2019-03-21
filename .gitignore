@@ -4,7 +4,8 @@ __pycache__/
 *$py.class
 
 # voc images
-data/
+data/VOCdevkit
+data/VOCtrainval_11-May-2012.tar
 
 # voc models
 
