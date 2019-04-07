@@ -39,13 +39,13 @@ We used ResNet50 as our deep learning architecture due to relatively low memory 
 We used transfer learning method since the object classes are very similar to ImageNet classes.
 
 ## Hyper-parameters
-Image size: 300x300
-Batch size: 32
-Initial learning rate: [1e-5 for resnet backbone, 5e-3 for the fully connected layer]
-Optimizer: SGD 
-Learning rate Scheduler: CosineAnnealing learning rate scheduler with Tmax = 12 
-Momentum: 0.9
-Epochs: 15
+Image size: 300x300  
+Batch size: 32  
+Initial learning rate: [1e-5 for resnet backbone, 5e-3 for the fully connected layer]  
+Optimizer: SGD  
+Learning rate Scheduler: CosineAnnealing learning rate scheduler with Tmax = 12  
+Momentum: 0.9  
+Epochs: 15  
 
 ## Challenges
 Hyperparameter search was an interesting challenge we faced. Initially our model faced overfitting problems and we were able to fix the problem by,
