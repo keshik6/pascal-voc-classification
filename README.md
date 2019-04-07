@@ -62,5 +62,5 @@ Epochs: 15
 ### Mean Tail Accuracy vs Classification Thresholds
 The graph below shows the variation of mean tail accuracies against classification thresholds for the entire validation dataset for 20 equally spaced threshold values from 0 to 1.0. 
 
-
+![clf_vs_threshold-1](https://user-images.githubusercontent.com/21276946/55679982-a4dc6200-5946-11e9-950d-c5ef48e1a4f9.png)
 
