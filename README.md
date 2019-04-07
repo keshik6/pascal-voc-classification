@@ -48,11 +48,11 @@ Momentum: 0.9
 Epochs: 15
 
 ## Challenges
-1. Hyperparameter search was an interesting challenge we faced. Initially our model faced overfitting problems and we were able to fix the problem by,
-2. Using smaller learning rate for the pre-trained resnet backbone so that we do not disrupt imagenet weights drastically.
-3. Using larger learning rate for the randomly initialized fully connected layer.
-4. Using learning rate scheduler rather than using static learning rates.
-5. Choosing good set of image augmentations to  add small amount of noise during training to make the model robust.
+Hyperparameter search was an interesting challenge we faced. Initially our model faced overfitting problems and we were able to fix the problem by,
+1. Using smaller learning rate for the pre-trained resnet backbone so that we do not disrupt imagenet weights drastically.
+2. Using larger learning rate for the randomly initialized fully connected layer.
+3. Using learning rate scheduler rather than using static learning rates.
+4. Choosing good set of image augmentations to add small amount of noise during training to make the model robust.
 
 ## Results
 ### Training History
