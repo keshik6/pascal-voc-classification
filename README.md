@@ -1,7 +1,4 @@
-# PASCAL VOC 
-## Object Classification
-
-
+# PASCAL VOC Object Classification
 
 ## Problem Statement
 The goal of this project is to recognize objects from a number of visual object classes in realistic scenes. There are 20 object classes:
@@ -65,3 +62,22 @@ The graph below shows the variation of mean tail accuracies against classificati
 
 ![clf_vs_threshold-1](https://user-images.githubusercontent.com/21276946/55679982-a4dc6200-5946-11e9-950d-c5ef48e1a4f9.png)
 
+## Flask Application for Inference 
+We built a flask application to allow users to predict on new images. The HTML page is rendered on the server and displayed in a browser. A user can select and upload a file using the website. Which will enable a predict button, that will display the predictions of the network when pressed. The repository containing the Flask Web application can be found at ***https://github.com/sk-aravind/Pytorch-Flask-Webapp***
+
+## How to reproduce the code?
+### Pytorch source code
+1. Install dependencies: pip install -r requirements.txt
+2. Directory structure
+    * /docs: contain project and devkit documentation
+    * /models: contains model weights, log-files and plots
+    * /src: contains source code
+    * /data: data directory to download and extract pascal VOC dataset (You should create this directory manually)
+    * Run the main function in main.py with required arguments. The codebase is clearly documented with clear details on how to execute the functions. It also includes an example. You need to interface only with this function to reproduce the code.
+
+### Flask App
+1. Install dependencies : pip install -r requirements.txt
+2. Deploy the app : python deploy.py
+3. Open a web browser and go to http://localhost:8000
+    * The CSV that renders the table is stored in static/csv
+    * The Pascal VOC Image Data is stored in static/data
