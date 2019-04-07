@@ -57,7 +57,8 @@ Epochs: 15
 
 ## Results
 ### Training History
-![tr_hist](https://user-images.githubusercontent.com/21276946/55679963-34354580-5946-11e9-8bbe-73d81322b438.jpg)
+![loss-1](https://user-images.githubusercontent.com/21276946/55679999-d3f2d380-5946-11e9-92a4-45b3f0356ab9.png)
+![accuracy-1](https://user-images.githubusercontent.com/21276946/55680003-d7865a80-5946-11e9-80a4-14898c4c88e7.png)
 
 ### Mean Tail Accuracy vs Classification Thresholds
 The graph below shows the variation of mean tail accuracies against classification thresholds for the entire validation dataset for 20 equally spaced threshold values from 0 to 1.0. 
