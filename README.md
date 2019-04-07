@@ -23,24 +23,9 @@ For our task, we regarded all ‘difficult’ marked objects as negative example
 
 ## Loss function
 
-The task is multi-label classification for 20 object classes, which is analogous to creating 20 object detectors, 1 for every class. Hence we have used binary cross entropy (with logits loss) as our loss function. The loss can be described as:
+The task is multi-label classification for 20 object classes, which is analogous to creating 20 object detectors, 1 for every class. Hence we have used binary cross entropy (with logits loss) as our loss function.
 
-    .. math::
-        \ell(x, y) = L = \{l_1,\dots,l_N\}^\top, \quad
-        l_n = - w_n \left[ y_n \cdot \log \sigma(x_n)
-        + (1 - y_n) \cdot \log (1 - \sigma(x_n)) \right],
-
-    where :math:`N` is the batch size. If reduce is ``True``, then
-
-    .. math::
-        \ell(x, y) = \begin{cases}
-            \operatorname{mean}(L), & \text{if size\_average} = \text{True},\\
-            \operatorname{sum}(L),  & \text{if size\_average} = \text{False}.
-        \end{cases}
-
-
-
-In pytorch, the loss function is torch.nn.BCEWithLogitsLoss( ). Do note that this function provides numerical stability over the sequence of sigmoid followed by binary cross entropy. 
+In pytorch, the loss function is torch.nn.BCEWithLogitsLoss( ). Do note that this function provides numerical stability over the sequence of sigmoid followed by binary cross entropy. The loss function is clearly documented at ***https://pytorch.org/docs/stable/_modules/torch/nn/modules/loss.html#BCEWithLogitsLoss***
 
 ## Metrics
 We used average precision as the metric to measure performance. It is simply the average of the maximum precisions at different recall values. 
@@ -48,7 +33,7 @@ We used average precision as the metric to measure performance. It is simply the
 Accuracy is a very poor metric to be used in this problem. I.e.: In a picture containing a person and dog, the model can output the result as train and get away with an accuracy of 85%!
 
 ## Model
-We used ResNet18 as our deep learning architecture due to relatively low memory utilization since number of parameters are less. (We used our local machines to train, preserving AWS credits for final project).  
+We used ResNet50 as our deep learning architecture due to relatively low memory utilization since number of parameters are less. (We used our local machines to train, preserving AWS credits for final project).  
 
 We used transfer learning method since the object classes are very similar to ImageNet classes.
 
@@ -67,4 +52,6 @@ Epochs: 15
 3. Using larger learning rate for the randomly initialized fully connected layer.
 4. Using learning rate scheduler rather than using static learning rates.
 5. Choosing good set of image augmentations to  add small amount of noise during training to make the model robust.
+
+## Results
 
