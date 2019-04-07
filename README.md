@@ -1,7 +1,9 @@
 # PASCAL VOC 
 ## Object Classification
-### 50.039 Theory and Practice of Deep Learning
 
+
+
+## Problem Statement
 The goal of this project is to recognize objects from a number of visual object classes in realistic scenes. There are 20 object classes:
 1. Person
 2. Bird, cat, cow, dog, horse, sheep
@@ -54,4 +56,11 @@ Epochs: 15
 5. Choosing good set of image augmentations to  add small amount of noise during training to make the model robust.
 
 ## Results
+### Training History
+![tr_hist](https://user-images.githubusercontent.com/21276946/55679963-34354580-5946-11e9-8bbe-73d81322b438.jpg)
+
+### Mean Tail Accuracy vs Classification Thresholds
+The graph below shows the variation of mean tail accuracies against classification thresholds for the entire validation dataset for 20 equally spaced threshold values from 0 to 1.0. 
+
+
 
